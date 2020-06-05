@@ -1,1 +1,2 @@
-# Project-1-NMTS
+# Nowoczesne Metody Teorii Sterowania
+# Projekt 1 
