@@ -1,6 +1,6 @@
 % --------------------------------------------------|
 % Nowoczesne Metody Teorii Sterowania Projekt 1     |
-% Micha³ Chruœciñski    XXXXXX                      |
+% Micha³ Chruœciñski    149741                      |
 % Adam Krempczyñski     165250                      |
 % --------------------------------------------------|
 
