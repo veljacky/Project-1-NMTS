@@ -85,7 +85,7 @@ A = [-4, 0, 0, 0, 0, 0, 0;
      
 disp("System described by matrices Al, Bl is controllable.")
 
-% Calculate gain matrix
+% Calculate gain matrix the usual way
 K2 = place(Al, Bl, poles);
 
 % State's gain matrix
@@ -95,7 +95,7 @@ Kloop = K2(:, 1:7);
 Ki = -1 * K2(:, 8:9);
 
 % Partial result for new system with state-feedback controller with
-% ingerators 
+% integrators 
 GKe = B*Ki;
 FGK = A - B*Kloop;
 
@@ -110,12 +110,12 @@ Cstar = [C, [0; 0], [0; 0]];
 Bstar = zeros(7, 2);
 Bstar = [Bstar; [1, 0]; [0, 1]];
 
-% Create a new system with state-feedback controller with integratos
+% Create a new system with state-feedback controller with integrators
 sysClosedLoopIntegr = ss(Astar2, Bstar, Cstar, D);
 
 % Simulate and plot step response of the new system
 [otpa, t3] = step(sysClosedLoopIntegr);
-plot_step(otpa, t3);
+plot_step(otpa, t3, "Closed loop with integrators system simulation using state space model");
 
 % *** OBSERVER DESIGN ***
 % Verify observability
@@ -145,7 +145,26 @@ D_obsv_ctr = zeros(2, 2);
 SYSobsv = ss(A_obsv_ctr, B_obsv_ctr, C_obsv_ctr, D_obsv_ctr);
 
 % Step response of the system with zero initial conditions
-[otp, t2] = step(SYSobsv);
-plot_step(otp, t2);
+[otp, t4] = step(SYSobsv);
+plot_step(otp, t4, "Observer + gain controller, zero initial conditions");
 
+% Step response with initial conditions
+x0 = [3, 4, 2, 1, 8, 12, 3, 0, 0, 0, 0, 0, 0, 0];
+[y,t5] = lsim(SYSobsv, ones(length(t2),2), t2, x0);
+
+Y1 = y(:, 1);
+Y2 = y(:, 2);
+
+figure;
+subplot(2, 1, 1);
+plot(t5, Y1);
+title(["Observer + gain controller, with initial conditions",'Output Y1']);
+xlabel('time [s]');
+ylabel('Amplitude');
+
+subplot(2, 1, 2);
+plot(t5, Y2);
+title(["Observer + gain controller, with initial conditions",'Output Y2']);
+xlabel('time [s]');
+ylabel('Amplitude');
  
