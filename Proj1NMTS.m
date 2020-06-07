@@ -41,7 +41,7 @@ A = [-4, 0, 0, 0, 0, 0, 0;
  
  % Simulate and plot step response of the base system
  [otp1, t1] = step(sys);
- plot_step(otp1, t1);
+ plot_step(otp1, t1, "Base system simulation using state space model");
  
  % Choose poles of the system with state feedback
  p = [-1 -1.23 -5.0 -2, -4, -8, -3];
@@ -57,7 +57,7 @@ A = [-4, 0, 0, 0, 0, 0, 0;
  
  % Simulate and plot step response of the closed loop system
  [otp, t2] = step(SYScl);
- plot_step(otp, t2);
+ plot_step(otp, t2, "Closed loop only system simulation using state space model");
  
  % Closed loop with integrator
  % Create new matrices Al and Bl to calculate state's gains and integration gains
@@ -106,7 +106,7 @@ A = [-4, 0, 0, 0, 0, 0, 0;
     
     % Simulate and plot step response of the new system
     [otpa, t3] = step(sysClosedLoopIntegr);
-    plot_step(otpa, t3);
+    plot_step(otpa, t3, "Closed loop with integrators system simulation using state space model");
  else
      disp("Matrices Al and Bl are uncontrollable");
  end
