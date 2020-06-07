@@ -7,15 +7,17 @@
 % Clear workspace
 clear;
 % Transfer function (G) creation 
-
 h11 = tf([0 0 1], [1 12 32]);
 h12 = tf([0 1 0 1], [1 6 11 6]);
 h21 = tf([0 0 1 2], [1 10 29 20]);
 h22 = tf([0 1], [1 3]);
 
-Bl = [h11 h12;
+G = [h11 h12;
      h21 h22];
 
+% Create matrices for state space model equivallent to 
+% transfer function G derivation of this model is in 
+% attached images
 A = [-4, 0, 0, 0, 0, 0, 0;
      0, -3, 0, 0, 0, 0, 0;
      1, 0, -8, 0, 0, 0, 0;
@@ -58,17 +60,23 @@ A = [-4, 0, 0, 0, 0, 0, 0;
  plot_step(otp, t2);
  
  % Closed loop with integrator
+ % Create new matrices Al and Bl to calculate state's gains and integration gains
  Al = [A, [0; 0; 0; 0; 0; 0; 0], [0; 0; 0; 0; 0; 0; 0];
      -C, [0; 0], [0; 0]];
  Bl = [B; [0; 0], [0; 0]];
  
- % Choose new system's poles
+ % Choose desired new system's poles in that case the same poles 
+ % as in closed loop system with 2 additional poles introduced by
+ % 2 added integrators, all poles with Re < 0 
  poles = [p, -2.4, -4.2];
+ 
+ % Check controllability of the Al and Bl pair. 
+ % It's needed to calculate gains in the usual way
  ControllabilityMatrix = ctrb(Al, Bl);
  if rank(ControllabilityMatrix) == 9
-    disp("Matrix Al and Bl are controllable");
+    disp("Matrices Al and Bl are controllable");
     
-    % Calculate gain matrix
+    % Calculate gain matrix the usual way
     K2 = place(Al, Bl, poles);
     
     % State's gain matrix
@@ -78,7 +86,7 @@ A = [-4, 0, 0, 0, 0, 0, 0;
     Ki = -1 * K2(:, 8:9);
     
     % Partial result for new system with state-feedback controller with
-    % ingerators 
+    % integrators 
     GKe = B*Ki;
     FGK = A - B*Kloop;
     
@@ -93,14 +101,14 @@ A = [-4, 0, 0, 0, 0, 0, 0;
     Bstar = zeros(7, 2);
     Bstar = [Bstar; [1, 0]; [0, 1]];
     
-    % Create a new system with state-feedback controller with integratos
+    % Create a new system with state-feedback controller with integrators
     sysClosedLoopIntegr = ss(Astar2, Bstar, Cstar, D);
     
     % Simulate and plot step response of the new system
     [otpa, t3] = step(sysClosedLoopIntegr);
     plot_step(otpa, t3);
  else
-     disp("Matrix Al and Bl are uncontrollable");
+     disp("Matrices Al and Bl are uncontrollable");
  end
 
  
